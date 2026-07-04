@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cole Bernard | Video Editor</title>
-    <link rel="stylesheet" href="styles.css?v=neon3" />
+    <link rel="stylesheet" href="styles.css?v=neon4" />
   </head>
   <body>
     <main class="page-shell">
@@ -71,12 +71,13 @@
       <div class="viewer__controls" aria-label="Video controls">
         <button class="viewer__toggle" type="button" aria-label="Play video">PLAY</button>
         <input class="viewer__scrub" type="range" min="0" max="100" value="0" step="0.1" aria-label="Scrub video" />
+        <label class="viewer__volume-wrap"><span>VOL</span><input class="viewer__volume" type="range" min="0" max="1" value="1" step="0.01" aria-label="Volume" /></label>
         <button class="viewer__mute" type="button" aria-label="Toggle sound">SOUND</button>
       </div>
       <p class="viewer__title"></p>
     </dialog>
 
-    <script src="script.js?v=player10"></script>
+    <script src="script.js?v=player11"></script>
   </body>
 </html>
 

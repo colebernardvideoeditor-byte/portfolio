@@ -6,6 +6,7 @@ const closeButton = document.querySelector(".viewer__close");
 const toggleButton = document.querySelector(".viewer__toggle");
 const scrub = document.querySelector(".viewer__scrub");
 const muteButton = document.querySelector(".viewer__mute");
+const volumeSlider = document.querySelector(".viewer__volume");
 let previewsSuspended = false;
 let isScrubbing = false;
 
@@ -75,6 +76,7 @@ function updateControls() {
   toggleButton.textContent = viewerVideo.paused ? "PLAY" : "PAUSE";
   toggleButton.setAttribute("aria-label", viewerVideo.paused ? "Play video" : "Pause video");
   muteButton.textContent = viewerVideo.muted ? "MUTED" : "SOUND";
+  volumeSlider.value = viewerVideo.muted ? "0" : viewerVideo.volume.toString();
 }
 
 function setViewerShape(tile) {
@@ -181,6 +183,17 @@ muteButton.addEventListener("click", () => {
   }
 });
 
+volumeSlider.addEventListener("input", () => {
+  const nextVolume = Number(volumeSlider.value);
+
+  if (!Number.isFinite(nextVolume)) {
+    return;
+  }
+
+  viewerVideo.volume = Math.min(1, Math.max(0, nextVolume));
+  viewerVideo.muted = viewerVideo.volume === 0;
+  updateControls();
+});
 scrub.addEventListener("pointerdown", () => {
   isScrubbing = true;
 });

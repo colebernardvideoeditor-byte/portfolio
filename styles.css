@@ -285,7 +285,7 @@ h1 {
 
 .viewer__controls {
   display: grid;
-  grid-template-columns: 88px minmax(120px, 1fr) 88px;
+  grid-template-columns: 88px minmax(120px, 1fr) minmax(112px, 150px) 88px;
   gap: 10px;
   align-items: center;
   border-top: 1px solid var(--line);
@@ -321,13 +321,36 @@ h1 {
   cursor: pointer;
 }
 
+.viewer__volume-wrap {
+  display: grid;
+  grid-template-columns: auto minmax(70px, 1fr);
+  gap: 8px;
+  align-items: center;
+  min-height: 44px;
+  border: 1px solid rgba(255, 43, 214, 0.38);
+  padding: 0 10px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.04);
+  font-size: 0.72rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.viewer__volume {
+  width: 100%;
+  accent-color: var(--cyan);
+  cursor: pointer;
+}
 @media (max-width: 620px) {
   .viewer__controls {
-    grid-template-columns: 76px minmax(80px, 1fr) 76px;
+    grid-template-columns: 76px minmax(80px, 1fr);
     gap: 8px;
     padding: 8px;
   }
 
+  .viewer__volume-wrap {
+    grid-column: span 2;
+  }
   .viewer__toggle,
   .viewer__mute {
     min-height: 40px;
