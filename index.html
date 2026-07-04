@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Cole Bernard | Video Editor</title>
-    <link rel="stylesheet" href="styles.css?v=neon1" />
+    <link rel="stylesheet" href="styles.css?v=neon3" />
   </head>
   <body>
     <main class="page-shell">
@@ -13,7 +13,8 @@
           <p class="kicker">Cole Bernard | Video Editor</p>
         </div>
         <nav class="hero__links" aria-label="Portfolio links">
-          <a class="contact-link" href="mailto:colebernardvideoeditor@gmail.com">Contact</a>
+          <a class="contact-link contact-link--gmail" href="https://mail.google.com/mail/?view=cm&fs=1&to=colebernardvideoeditor@gmail.com" target="_blank" rel="noopener">Gmail</a>
+          <a class="contact-link contact-link--email" href="mailto:colebernardvideoeditor@gmail.com">colebernardvideoeditor@gmail.com</a>
           <a class="contact-link" href="https://colebernardvideoeditor-byte.github.io/web/">Full Portfolio</a>
         </nav>
       </header>
@@ -66,11 +67,16 @@
 
     <dialog class="viewer" aria-label="Video viewer">
       <button class="viewer__close" type="button" aria-label="Close video">x</button>
-      <video class="viewer__video" controls playsinline></video>
+      <video class="viewer__video" playsinline preload="metadata"></video>
+      <div class="viewer__controls" aria-label="Video controls">
+        <button class="viewer__toggle" type="button" aria-label="Play video">PLAY</button>
+        <input class="viewer__scrub" type="range" min="0" max="100" value="0" step="0.1" aria-label="Scrub video" />
+        <button class="viewer__mute" type="button" aria-label="Toggle sound">SOUND</button>
+      </div>
       <p class="viewer__title"></p>
     </dialog>
 
-    <script src="script.js?v=player5"></script>
+    <script src="script.js?v=player7"></script>
   </body>
 </html>
 
