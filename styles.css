@@ -179,6 +179,17 @@ h1 {
   letter-spacing: 0;
   text-transform: uppercase;
 }
+
+.tile--four-five button {
+  justify-content: flex-start;
+  padding-top: 10px;
+}
+
+.tile--four-five::before {
+  inset: 0 0 auto;
+  height: 24%;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.58), transparent);
+}
 .tile button:focus-visible { outline: 4px solid var(--cyan); outline-offset: -8px; }
 .footer {
   display: flex;
@@ -247,6 +258,7 @@ h1 {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
 
 
 
