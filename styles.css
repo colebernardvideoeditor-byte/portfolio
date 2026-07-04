@@ -25,18 +25,18 @@ body {
 button, a { font: inherit; }
 .page-shell { width: min(1720px, calc(100% - 32px)); margin: 0 auto; }
 .hero {
-  min-height: 30svh;
+  min-height: 18svh;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
-  padding: 34px 0 22px;
+  padding: 28px 0 18px;
 }
 .hero__copy { max-width: 1180px; }
 .kicker {
-  margin: 0 0 10px;
+  margin: 0;
   color: var(--acid);
-  font-size: clamp(0.78rem, 1.4vw, 1rem);
+  font-size: clamp(1.35rem, 3vw, 3.2rem);
   font-weight: 900;
   letter-spacing: 0;
   text-transform: uppercase;
@@ -123,13 +123,11 @@ h1 {
 .tile::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: auto 0 0;
+  height: 28%;
   z-index: 1;
   pointer-events: none;
-  background:
-    linear-gradient(180deg, transparent 42%, rgba(0, 0, 0, 0.76)),
-    linear-gradient(120deg, rgba(215, 255, 22, 0.14), transparent 42%, rgba(255, 46, 166, 0.15));
-  mix-blend-mode: screen;
+  background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.58));
 }
 .tile::after {
   content: "";
@@ -151,27 +149,33 @@ h1 {
   align-items: flex-start;
   width: 100%;
   border: 0;
-  padding: clamp(14px, 2vw, 26px);
+  padding: 10px;
   color: var(--ink);
   text-align: left;
   background: transparent;
   cursor: pointer;
 }
-.tile span, .tile b {
-  max-width: 100%;
-  text-wrap: balance;
-  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.72);
+.tile span,
+.tile b {
+  max-width: min(82%, 230px);
+  display: inline-block;
+  padding: 4px 7px;
+  background: rgba(5, 5, 5, 0.68);
+  backdrop-filter: blur(10px);
+  text-shadow: none;
 }
+
 .tile span {
   color: var(--acid);
-  font-size: clamp(0.72rem, 1.2vw, 0.9rem);
+  font-size: clamp(0.62rem, 0.85vw, 0.76rem);
   font-weight: 900;
   text-transform: uppercase;
 }
+
 .tile b {
-  margin-top: 4px;
-  font-size: clamp(1.35rem, 3.7vw, 4.6rem);
-  line-height: 0.88;
+  margin-top: 3px;
+  font-size: clamp(0.82rem, 1.25vw, 1.05rem);
+  line-height: 1;
   letter-spacing: 0;
   text-transform: uppercase;
 }
@@ -225,25 +229,28 @@ h1 {
   text-transform: uppercase;
 }
 @media (max-width: 980px) {
-  .hero { min-height: 30svh; align-items: flex-start; flex-direction: column; justify-content: flex-end; }
+  .hero { min-height: 18svh; align-items: flex-start; flex-direction: column; justify-content: center; }
   .tile--four-five { --tile-width: clamp(250px, 43vw, 380px); }
   .tile--nine-sixteen { --tile-width: clamp(210px, 32vw, 300px); }
   .tile--sixteen-nine { --tile-width: min(100%, 720px); --tile-max: 100%; }
 }
 @media (max-width: 620px) {
   .page-shell { width: min(100% - 20px, 1720px); }
-  .hero { min-height: 28svh; padding-top: 26px; }
-  h1 { font-size: clamp(3.2rem, 17vw, 6.5rem); }
+  .hero { min-height: 16svh; padding-top: 22px; }
   .hero__links { width: 100%; flex-direction: column; }
   .contact-link { width: 100%; }
   .reel-wall { gap: 10px; }
   .tile { flex-basis: 100%; max-width: 100%; }
-  .tile b { font-size: clamp(2.6rem, 16vw, 5.2rem); }
+  .tile b { font-size: 0.95rem; }
   .footer { justify-content: flex-start; padding-bottom: 28px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }
+
+
+
+
 
 
 
