@@ -3,9 +3,7 @@ const viewer = document.querySelector(".viewer");
 const viewerVideo = document.querySelector(".viewer__video");
 const viewerTitle = document.querySelector(".viewer__title");
 const closeButton = document.querySelector(".viewer__close");
-const playableTiles = new Set();
-let priorityTile = null;
-let hoveredTile = null;
+const preloadedTiles = new Set();
 const maxPreviewPlayers = 1;
 
 function primePreview(video) {
@@ -43,47 +41,12 @@ function playPreview(video) {
   video.play().catch(() => {});
 }
 
-function activateTilePreview(tile, video) {
-  priorityTile = tile;
-  playableTiles.add(tile);
-  playPreview(video);
-}
+function visibleRatio(rect) {
+  const visibleTop = Math.max(rect.top, 0);
+  const visibleBottom = Math.min(rect.bottom, window.innerHeight);
+  const visibleHeight = Math.max(0, visibleBottom - visibleTop);
 
-function releaseTilePreview(tile) {
-  if (priorityTile === tile) {
-    priorityTile = null;
-  }
-
-  schedulePreviews();
-}
-
-function activatePointPreview(event) {
-  const element = document.elementFromPoint(event.clientX, event.clientY);
-  const tile = element && element.closest ? element.closest(".tile") : null;
-
-  if (!tile || tile === hoveredTile) {
-    return;
-  }
-
-  if (hoveredTile) {
-    releaseTilePreview(hoveredTile);
-  }
-
-  hoveredTile = tile;
-  activateTilePreview(tile, tile.querySelector("video"));
-}
-
-function clearPointPreview(event) {
-  const element = document.elementFromPoint(event.clientX, event.clientY);
-  const tile = element && element.closest ? element.closest(".tile") : null;
-
-  if (!hoveredTile || tile === hoveredTile) {
-    return;
-  }
-
-  const tileToRelease = hoveredTile;
-  hoveredTile = null;
-  releaseTilePreview(tileToRelease);
+  return visibleHeight / rect.height;
 }
 
 function tileDistanceFromViewport(tile) {
@@ -94,18 +57,30 @@ function tileDistanceFromViewport(tile) {
   return Math.abs(tileCenter - viewportCenter);
 }
 
+function getVisibleTiles() {
+  return [...tiles].filter((tile) => visibleRatio(tile.getBoundingClientRect()) >= 0.2);
+}
+
+function getScheduledTiles() {
+  return getVisibleTiles()
+    .sort((a, b) => tileDistanceFromViewport(a) - tileDistanceFromViewport(b))
+    .slice(0, maxPreviewPlayers);
+}
+
+function tryHoverBackup(tile, video) {
+  if (!getScheduledTiles().includes(tile)) {
+    return;
+  }
+
+  playPreview(video);
+}
+
 function schedulePreviews() {
   if (viewer.open) {
     return;
   }
 
-  const prioritizedTiles = [...playableTiles].sort((a, b) => tileDistanceFromViewport(a) - tileDistanceFromViewport(b));
-
-  if (priorityTile) {
-    prioritizedTiles.unshift(priorityTile);
-  }
-
-  const playingTiles = new Set(prioritizedTiles.slice(0, maxPreviewPlayers));
+  const playingTiles = new Set(getScheduledTiles());
 
   tiles.forEach((tile) => {
     const video = tile.querySelector("video");
@@ -131,16 +106,14 @@ function cleanupFarPreviews() {
     const video = tile.querySelector("video");
     const isFarAway = tileDistanceFromViewport(tile) > window.innerHeight * 2.4;
 
-    if (video && video.getAttribute("src") && !playableTiles.has(tile) && isFarAway) {
+    if (video && video.getAttribute("src") && !preloadedTiles.has(tile) && isFarAway) {
       unloadPreview(video);
     }
   });
 }
 
 function unloadAllPreviews() {
-  playableTiles.clear();
-  priorityTile = null;
-  hoveredTile = null;
+  preloadedTiles.clear();
 
   tiles.forEach((tile) => {
     const video = tile.querySelector("video");
@@ -167,6 +140,12 @@ const preloadObserver = new IntersectionObserver(
     entries.forEach((entry) => {
       const video = entry.target.querySelector("video");
 
+      if (entry.isIntersecting) {
+        preloadedTiles.add(entry.target);
+      } else {
+        preloadedTiles.delete(entry.target);
+      }
+
       if (video && entry.isIntersecting) {
         loadPreview(video);
       }
@@ -175,42 +154,22 @@ const preloadObserver = new IntersectionObserver(
   { rootMargin: "500px 0px", threshold: 0.01 }
 );
 
-const playbackObserver = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        playableTiles.add(entry.target);
-      } else {
-        playableTiles.delete(entry.target);
-      }
-    });
-
-    schedulePreviews();
-    cleanupFarPreviews();
-  },
-  { rootMargin: "0px", threshold: 0.2 }
-);
-
 tiles.forEach((tile) => {
   const video = tile.querySelector("video");
   const tileButton = tile.querySelector("button");
-  const activate = () => activateTilePreview(tile, video);
-  const release = () => releaseTilePreview(tile);
+  const activate = () => tryHoverBackup(tile, video);
 
   primePreview(video);
   preloadObserver.observe(tile);
-  playbackObserver.observe(tile);
 
   video.addEventListener("loadeddata", schedulePreviews);
   video.addEventListener("canplay", schedulePreviews);
 
   tile.addEventListener("pointerenter", activate);
   tile.addEventListener("pointerover", activate);
-  tile.addEventListener("pointerleave", release);
   tile.addEventListener("mouseenter", activate);
   tile.addEventListener("mouseover", activate);
   tile.addEventListener("mousemove", activate);
-  tile.addEventListener("mouseleave", release);
 
   tileButton.addEventListener("pointerenter", activate);
   tileButton.addEventListener("pointerover", activate);
@@ -218,7 +177,6 @@ tiles.forEach((tile) => {
   tileButton.addEventListener("mouseover", activate);
   tileButton.addEventListener("mousemove", activate);
   tileButton.addEventListener("focus", activate);
-  tileButton.addEventListener("blur", release);
 
   tileButton.addEventListener("click", () => {
     const src = tile.dataset.video;
@@ -237,9 +195,6 @@ tiles.forEach((tile) => {
   });
 });
 
-document.addEventListener("pointermove", activatePointPreview);
-document.addEventListener("mousemove", activatePointPreview);
-document.addEventListener("mouseout", clearPointPreview);
 window.addEventListener("load", schedulePreviews);
 window.addEventListener(
   "scroll",
@@ -249,6 +204,7 @@ window.addEventListener(
   },
   { passive: true }
 );
+window.addEventListener("resize", schedulePreviews);
 document.addEventListener("visibilitychange", schedulePreviews);
 setTimeout(schedulePreviews, 350);
 setTimeout(schedulePreviews, 1200);
