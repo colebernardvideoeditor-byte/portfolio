@@ -135,14 +135,12 @@ tiles.forEach((tile) => {
     updateControls();
     viewer.showModal();
     viewerVideo.load();
-    playViewer(true);
   });
 });
 
 function handleTogglePlay() {
   if (viewerVideo.paused) {
-    viewerVideo.muted = true;
-    playViewer(false);
+    playViewer(true);
   } else {
     viewerVideo.pause();
   }
@@ -153,9 +151,34 @@ function handleTogglePlay() {
 toggleButton.addEventListener("click", handleTogglePlay);
 viewerVideo.addEventListener("click", handleTogglePlay);
 
-muteButton.addEventListener("click", () => {
-  viewerVideo.muted = !viewerVideo.muted;
+function unmuteWhilePlaying() {
+  viewerVideo.muted = false;
   updateControls();
+
+  const attempt = viewerVideo.play();
+
+  if (attempt) {
+    attempt.catch(() => updateControls());
+  }
+}
+
+muteButton.addEventListener("click", () => {
+  if (viewerVideo.muted) {
+    viewerVideo.muted = true;
+    const attempt = viewerVideo.play();
+
+    if (attempt) {
+      attempt.then(unmuteWhilePlaying).catch(() => {
+        viewerVideo.muted = false;
+        updateControls();
+      });
+    } else {
+      unmuteWhilePlaying();
+    }
+  } else {
+    viewerVideo.muted = true;
+    updateControls();
+  }
 });
 
 scrub.addEventListener("pointerdown", () => {
