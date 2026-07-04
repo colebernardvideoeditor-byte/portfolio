@@ -1,8 +1,9 @@
-﻿const tiles = document.querySelectorAll(".tile");
+const tiles = document.querySelectorAll(".tile");
 const viewer = document.querySelector(".viewer");
 const viewerVideo = document.querySelector(".viewer__video");
 const viewerTitle = document.querySelector(".viewer__title");
 const closeButton = document.querySelector(".viewer__close");
+let previewsSuspended = false;
 
 function setupPreview(video) {
   video.muted = true;
@@ -11,11 +12,18 @@ function setupPreview(video) {
   video.loop = true;
   video.autoplay = true;
   video.preload = "auto";
-  video.src = video.dataset.src;
-  video.load();
+
+  if (!video.getAttribute("src")) {
+    video.src = video.dataset.src;
+    video.load();
+  }
 }
 
 function playPreview(video) {
+  if (previewsSuspended || document.hidden) {
+    return;
+  }
+
   const attempt = video.play();
 
   if (attempt) {
@@ -24,28 +32,46 @@ function playPreview(video) {
 }
 
 function playAllPreviews() {
-  if (viewer.open || document.hidden) {
+  if (viewer.open || previewsSuspended || document.hidden) {
     return;
   }
 
   tiles.forEach((tile) => {
-    playPreview(tile.querySelector("video"));
+    const video = tile.querySelector("video");
+    setupPreview(video);
+    playPreview(video);
   });
 }
 
-function pauseAllPreviews() {
+function suspendPreviews() {
+  previewsSuspended = true;
+
   tiles.forEach((tile) => {
-    tile.querySelector("video").pause();
+    const video = tile.querySelector("video");
+    video.pause();
+    video.removeAttribute("src");
+    video.src = "";
+    video.load();
   });
+}
+
+function restorePreviews() {
+  previewsSuspended = false;
+  playAllPreviews();
 }
 
 function playViewer() {
+  viewerVideo.muted = false;
   const attempt = viewerVideo.play();
 
   if (attempt) {
     attempt.catch(() => {
       viewerVideo.muted = true;
-      viewerVideo.play().catch(() => {});
+      const mutedAttempt = viewerVideo.play();
+
+      if (mutedAttempt) {
+        mutedAttempt.catch(() => {});
+      }
     });
   }
 }
@@ -64,8 +90,9 @@ tiles.forEach((tile) => {
     const src = tile.dataset.video;
     const title = tile.querySelector("span").textContent + " / " + tile.querySelector("b").textContent;
 
-    pauseAllPreviews();
+    suspendPreviews();
     viewerVideo.pause();
+    viewerVideo.controls = true;
     viewerVideo.muted = false;
     viewerVideo.preload = "auto";
     viewerVideo.src = src;
@@ -73,16 +100,15 @@ tiles.forEach((tile) => {
     viewer.showModal();
     viewerVideo.load();
     playViewer();
-    viewerVideo.addEventListener("canplay", playViewer, { once: true });
   });
 });
 
 window.addEventListener("load", playAllPreviews);
 document.addEventListener("visibilitychange", () => {
   if (document.hidden) {
-    pauseAllPreviews();
-  } else {
-    playAllPreviews();
+    suspendPreviews();
+  } else if (!viewer.open) {
+    restorePreviews();
   }
 });
 setTimeout(playAllPreviews, 350);
@@ -91,9 +117,10 @@ setTimeout(playAllPreviews, 1200);
 function closeViewer() {
   viewerVideo.pause();
   viewerVideo.removeAttribute("src");
+  viewerVideo.src = "";
   viewerVideo.load();
   viewer.close();
-  playAllPreviews();
+  restorePreviews();
 }
 
 closeButton.addEventListener("click", closeViewer);
