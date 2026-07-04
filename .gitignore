@@ -4,5 +4,3 @@ tools/
 range_server.py
 portfolio-pages-repo/
 portfolio-push-staging/
-posters/
-!posters/*.jpg
