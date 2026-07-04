@@ -4,7 +4,7 @@ const viewerVideo = document.querySelector(".viewer__video");
 const viewerTitle = document.querySelector(".viewer__title");
 const closeButton = document.querySelector(".viewer__close");
 const playableTiles = new Set();
-const maxPreviewPlayers = 2;
+const maxPreviewPlayers = 1;
 
 function primePreview(video) {
   video.muted = true;
@@ -120,7 +120,7 @@ const preloadObserver = new IntersectionObserver(
       }
     });
   },
-  { rootMargin: "1600px 0px", threshold: 0.01 }
+  { rootMargin: "500px 0px", threshold: 0.01 }
 );
 
 const playbackObserver = new IntersectionObserver(
@@ -136,7 +136,7 @@ const playbackObserver = new IntersectionObserver(
     schedulePreviews();
     cleanupFarPreviews();
   },
-  { rootMargin: "80px 0px", threshold: 0.12 }
+  { rootMargin: "0px", threshold: 0.2 }
 );
 
 tiles.forEach((tile) => {
@@ -194,4 +194,5 @@ viewer.addEventListener("cancel", (event) => {
   event.preventDefault();
   closeViewer();
 });
+
 
