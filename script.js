@@ -4,6 +4,7 @@ const viewerVideo = document.querySelector(".viewer__video");
 const viewerTitle = document.querySelector(".viewer__title");
 const closeButton = document.querySelector(".viewer__close");
 const playableTiles = new Set();
+let priorityTile = null;
 const maxPreviewPlayers = 1;
 
 function primePreview(video) {
@@ -55,6 +56,11 @@ function schedulePreviews() {
   }
 
   const prioritizedTiles = [...playableTiles].sort((a, b) => tileDistanceFromViewport(a) - tileDistanceFromViewport(b));
+
+  if (priorityTile) {
+    prioritizedTiles.unshift(priorityTile);
+  }
+
   const playingTiles = new Set(prioritizedTiles.slice(0, maxPreviewPlayers));
 
   tiles.forEach((tile) => {
@@ -148,6 +154,34 @@ tiles.forEach((tile) => {
   video.addEventListener("loadeddata", schedulePreviews);
   video.addEventListener("canplay", schedulePreviews);
 
+  tile.addEventListener("pointerenter", () => {
+    priorityTile = tile;
+    playableTiles.add(tile);
+    playPreview(video);
+  });
+
+  tile.addEventListener("pointerleave", () => {
+    if (priorityTile === tile) {
+      priorityTile = null;
+    }
+
+    schedulePreviews();
+  });
+
+  tile.addEventListener("focusin", () => {
+    priorityTile = tile;
+    playableTiles.add(tile);
+    playPreview(video);
+  });
+
+  tile.addEventListener("focusout", () => {
+    if (priorityTile === tile) {
+      priorityTile = null;
+    }
+
+    schedulePreviews();
+  });
+
   tile.querySelector("button").addEventListener("click", () => {
     const src = tile.dataset.video;
     const title = tile.querySelector("span").textContent + " / " + tile.querySelector("b").textContent;
@@ -194,5 +228,8 @@ viewer.addEventListener("cancel", (event) => {
   event.preventDefault();
   closeViewer();
 });
+
+
+
 
 
