@@ -1,0 +1,6 @@
+﻿# Local-only originals and tools
+/*.mp4
+tools/
+range_server.py
+portfolio-pages-repo/
+portfolio-push-staging/

@@ -1,0 +1,85 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Short Form Portfolio</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero" aria-label="Portfolio intro">
+        <div class="hero__copy">
+          <p class="kicker">Cole Bernard / Short form editor</p>
+          <h1>High-impact clips. Fast watch.</h1>
+        </div>
+        <nav class="hero__links" aria-label="Portfolio links">
+          <a class="contact-link" href="mailto:colebernardvideoeditor@gmail.com">Contact</a>
+          <a class="contact-link" href="https://colebernardvideoeditor-byte.github.io/web/">Full Portfolio</a>
+        </nav>
+      </header>
+
+      <section class="reel-wall" aria-label="Selected video work">
+        <article class="tile tile--four-five" data-video="videos/Amanda Mccants Sizzle Reel.mp4">
+          <video data-src="videos/Amanda Mccants Sizzle Reel.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch Amanda Mccants Sizzle Reel"><span>Amanda McCants</span><b>Sizzle Reel</b></button>
+        </article>
+        <article class="tile tile--four-five" data-video="videos/Dude Perfect Sizzle.mp4">
+          <video data-src="videos/Dude Perfect Sizzle.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch Dude Perfect Sizzle"><span>Dude Perfect</span><b>Sizzle</b></button>
+        </article>
+        <article class="tile tile--nine-sixteen" data-video="videos/AI tools no gaus clean bg.mp4">
+          <video data-src="videos/AI tools no gaus clean bg.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch AI Tools"><span>AI Tools</span><b>Explainer</b></button>
+        </article>
+        <article class="tile tile--four-five" data-video="videos/Labrant Family 4x5.mp4">
+          <video data-src="videos/Labrant Family 4x5.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch Labrant Family"><span>Labrant Family</span><b>4x5 Cut</b></button>
+        </article>
+        <article class="tile tile--nine-sixteen" data-video="videos/Every Human is One Project Away.mp4">
+          <video data-src="videos/Every Human is One Project Away.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch Every Human is One Project Away"><span>Every Human</span><b>One Project Away</b></button>
+        </article>
+        <article class="tile tile--nine-sixteen" data-video="videos/Podcast Clip_1.mp4">
+          <video data-src="videos/Podcast Clip_1.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch Podcast Clip"><span>Podcast</span><b>Clip</b></button>
+        </article>
+        <article class="tile tile--nine-sixteen" data-video="videos/Todd Takes.mp4">
+          <video data-src="videos/Todd Takes.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch Todd Takes"><span>Todd Takes</span><b>Social Cut</b></button>
+        </article>
+        <article class="tile tile--nine-sixteen" data-video="videos/Turning Pro is Easier.mp4">
+          <video data-src="videos/Turning Pro is Easier.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch Turning Pro is Easier"><span>Turning Pro</span><b>Is Easier</b></button>
+        </article>
+        <article class="tile tile--sixteen-nine" data-video="videos/After Work Intro.mp4">
+          <video data-src="videos/After Work Intro.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch After Work Intro"><span>After Work</span><b>Intro</b></button>
+        </article>
+        <article class="tile tile--sixteen-nine" data-video="videos/ending.mp4">
+          <video data-src="videos/ending.mp4" muted loop playsinline preload="none"></video>
+          <button type="button" aria-label="Watch Ending"><span>Ending</span><b>Sequence</b></button>
+        </article>
+      </section>
+
+      <footer class="footer"><p>Selected samples. Other work upon request.</p></footer>
+    </main>
+
+    <dialog class="viewer" aria-label="Video viewer">
+      <button class="viewer__close" type="button" aria-label="Close video">x</button>
+      <video class="viewer__video" controls playsinline></video>
+      <p class="viewer__title"></p>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
